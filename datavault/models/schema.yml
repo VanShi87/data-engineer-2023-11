@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: src
+    database: postgres
+    schema: dbt
+    tables:
+      - name: source_customers
+      - name: source_orders
