@@ -14,3 +14,39 @@ models:
       - name: last_name
         tests:
           - not null
+  - name: stg_orders
+    column:
+      - name: order_id
+        tests:
+          - unique
+          - not null
+      - name: customer_id
+        tests:
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id
+      - name: order_date
+        description: It's first name!
+        tests:
+          - not null
+      - name: status
+        tests:
+          - accepted_values:
+              values: ['placed', 'shipped', 'returned', 'return_pending', 'completed']
+  - name: stg_payments
+    column:
+      - name: payment_id
+        tests:
+          - unique
+          - not null
+      - name: order_id
+        tests:
+          - unique
+          - not null
+      - name: payment_method
+        description: It's first name!
+        tests:
+          - not null
+      - name: amount
+        tests:
+          - not null
