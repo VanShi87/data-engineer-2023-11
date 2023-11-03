@@ -32,3 +32,13 @@ replay_pid*
 /.idea/misc.xml
 /.idea/modules.xml
 /.idea/vcs.xml
+/.idea/dataSources.xml
+/dbt-shop/target/compiled/dbt_shop/models/staging/stg_customers.sql
+/dbt-shop/target/run/dbt_shop/models/staging/stg_customers.sql
+/dbt-shop/target/run/dbt_shop/seeds/raw_customers.csv
+/dbt-shop/target/run/dbt_shop/seeds/raw_orders.csv
+/dbt-shop/target/run/dbt_shop/seeds/raw_payments.csv
+/dbt-shop/target/graph.gpickle
+/dbt-shop/target/manifest.json
+/dbt-shop/target/partial_parse.msgpack
+/dbt-shop/target/run_results.json
