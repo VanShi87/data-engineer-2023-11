@@ -1,0 +1,16 @@
+version: 2
+
+models:
+  - name: stg_customers
+    column:
+      - name: customer_id
+        tests:
+          - unique
+          - not null
+      - name: first_name
+        description: It's first name!
+        tests:
+          - not null
+      - name: last_name
+        tests:
+          - not null
