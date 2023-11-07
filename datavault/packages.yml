@@ -1,0 +1,3 @@
+packages:
+  - git: "https://github.com/CoolTeam74/dbtvault.git"
+    revision: main

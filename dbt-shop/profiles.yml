@@ -4,7 +4,7 @@ dbt_shop:
             type: postgres
             threads: 2
             host: localhost
-            port: 5433
+            port: 5432
             user: postgres
             pass: postgres
             dbname: postgres
