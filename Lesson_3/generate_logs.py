@@ -5,10 +5,6 @@ import numpy as np
 import faker
 
 fake = faker.Faker()
-fake.ipv4()
-fake.url()
-fake.date_time_between('-30d')
-
 
 def generate_random_integers(min_value, max_value, n):
     result = set()
@@ -62,8 +58,8 @@ def generate_dataframe(n, columns):
     return pd.DataFrame(data)
 
 
-df = generate_dataframe(25, [('url', 'url', {'nonunique': 50}),
+df = generate_dataframe(10000, [('url', 'url', {'nonunique': 50}),
                              ('ip', 'ipv4', {'nonunique': 50}),
                              ('start_point', 'date_time_between', {'nonunique': 50, 'args': ['-30d']}),
-                             ('duration', int, {'nonunique': 50, 'maxvalue': 3600})])
+                             ('duration', int, {'nonunique': 80, 'maxvalue': 3600})])
 df.to_json('data.json', orient='values')
