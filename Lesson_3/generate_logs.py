@@ -62,4 +62,4 @@ df = generate_dataframe(10000, [('url', 'url', {'nonunique': 50}),
                              ('ip', 'ipv4', {'nonunique': 50}),
                              ('start_point', 'date_time_between', {'nonunique': 50, 'args': ['-30d']}),
                              ('duration', int, {'nonunique': 80, 'maxvalue': 3600})])
-df.to_json('data.json', orient='values')
+df.to_json('data.json', orient='records')
