@@ -14,3 +14,46 @@ db.log_stat.find({start_point: {$gte: ISODate("2023-10-01T00:00:00Z").getTime(),
 
 Выдать упорядоченный список URL ресурсов, посещенных пользователем с заданным IP-адресом
 db.log_stat.find({ip: "148.59.61.223"}, {url: 1, _id: 0}).sort({url: 1})
+
+Выдать список URL ресурсов с указанием суммарной длительности посещения каждого ресурса, упорядоченный по убыванию.
+db.log_stat.mapReduce(function(){emit(this.url, this.duration);}, function(key, values) {return Array.sum(values)}, {out: "total_duration",     sort: { value: -1 }} )
+db.total_duration.find()
+
+Выдать список URL ресурсов с указанием суммарного количества посещений каждого ресурса, упорядоченный по убыванию
+db.log_stat.mapReduce(function(){emit(this.url, 1);}, function(key, values) {return Array.sum(values)}, {out: "total_views",     sort: { value: -1 }} )
+db.total_views.find()
+
+Выдать список URL ресурсов с указанием количества посещений каждого ресурса в день за заданный период, упорядоченный URL ресурса и убыванию количества посещений.
+db.log_stat.mapReduce(function() {
+                                    var date = new Date(this.start_point).toISOString().split('T')[0];
+                                    emit({url: this.url, date: date}, {count: 1});
+                                },
+                      function(key, values) {
+                                            var count = 0;
+                                            values.forEach(function(value) {
+                                                                           count += value.count;
+                                            });
+                                            return {count: count};
+                                            },
+    {
+        out: "url_visits"
+    }
+).find().sort({"value.count": -1});
+Выдать список IP-адресов c указанием суммарного количества и суммарной длительности посещений ресурсов, упорядоченный по адресу, убыванию количества и убыванию длительности.
+db.log_stat.mapReduce(
+  function() {
+    emit(this.ip, { count: 1, duration: this.duration });
+  },
+  function(key, values) {
+    var result = { count: 0, duration: 0 };
+    values.forEach(function(value) {
+      result.count += value.count;
+      result.duration += value.duration;
+    });
+    return result;
+  },
+  {
+    out: { inline: 1 },
+    sort: { _id: 1, "value.count": -1, "value.duration": -1 }
+  }
+)
