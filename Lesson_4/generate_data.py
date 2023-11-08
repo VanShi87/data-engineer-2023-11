@@ -10,6 +10,8 @@ NUM_PERSONS = 20
 NUM_GROUPS = 5
 NUM_FRIEND_LINKS = 30
 NUM_GROUP_LINKS = 25
+MAX_TWEETS = 10
+MAX_CHAR = 15
 
 df = pd.DataFrame()
 df['sex'] = np.random.choice(['F', 'M'], NUM_PERSONS)
@@ -18,6 +20,9 @@ df['name'] = np.where(df['sex']=='F',
                       [fake.name_male() for _ in range(NUM_PERSONS)])
 df['age'] = np.random.randint(16, 70, NUM_PERSONS)
 df['city'] = np.random.choice(['Moscow', 'St-Petersburg', 'Voronezh', 'Yaroslavl', 'Sochi'], NUM_PERSONS)
+df['tweets'] = [[fake.paragraph()[:np.random.randint(5, MAX_CHAR)]
+                for _ in range(np.random.randint(0, MAX_TWEETS))]
+               for _ in range(NUM_PERSONS)]
 df['code'] = ('CREATE (:Person {name: "' +
                df['name'] +
               '", sex: "' +
@@ -26,8 +31,11 @@ df['code'] = ('CREATE (:Person {name: "' +
                df['age'].astype('str') +
               ', city: "' +
               df['city'] +
-              '"});'
+              ', tweets: ' +
+              df['tweets'].astype('str') +
+              '});'
               )
+df['code'] = df['code'].str.replace("u'", "'")
 
 person_query = '\n'.join(df['code'].values)
 
