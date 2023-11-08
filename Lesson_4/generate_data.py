@@ -31,7 +31,7 @@ df['code'] = ('CREATE (:Person {name: "' +
                df['age'].astype('str') +
               ', city: "' +
               df['city'] +
-              ', tweets: ' +
+              '", tweets: ' +
               df['tweets'].astype('str') +
               '});'
               )
