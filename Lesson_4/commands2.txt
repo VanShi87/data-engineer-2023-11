@@ -8,27 +8,40 @@ MATCH (p:Person) RETURN p.name ORDER BY p.name
 
 2) Выдать список ФИО мужчин с указанием возраста, упорядоченный по
 убыванию возраста.
+MATCH (p:Person{sex:'M'}) RETURN p.name, p.age ORDER BY p.age DESC
 
 3) Выдать упорядоченный список ФИО друзей персоны заданными ФИО.
+MATCH (:Person{name:'Diana Andrews'})-[:Friend]-(p:Person) RETURN p.name ORDER BY p.name
+
 4) Выдать упорядоченный список ФИО друзей друзей персоны заданными
 ФИО.
+MATCH (da:Person{name:'Diana Andrews'})-[:Friend*2]-(p:Person) WHERE p<>da RETURN DISTINCT p.name ORDER BY p.name
+
 5) Выдать упорядоченный по алфавиту список ФИО персон, в котором для
 каждой персоны указано количество друзей.
+MATCH (p:Person)-[r:Friend]-(:Person)  RETURN p.name, count(r) ORDER BY p.name
 
 2 Изучите справочную информацию о языке Cypher по теме Functions и разра-
 ботайте следующие запросы:
 
 1) Выдать упорядоченный список групп социальной сети.
+MATCH (g:Group) RETURN g.name ORDER BY g.name
+
 2) Выдать упорядоченный список групп персоны с заданными ФИО.
+MATCH (:Person{name:'Jessica Dominguez'})-[:Subscribe]-(g:Group) RETURN g.name ORDER BY g.name
+
 3) Выдать список групп социальной сети с указанием количества членов
 каждой группы, упорядоченный по убыванию количества членов группы.
+MATCH (g:Group)-[r:Subscribe]-() RETURN g.name, count(r) as num_subscribers ORDER BY num_subscribers DESC
 
 4) Выдать список ФИО персон, в котором для каждой персоны указано ко-
 личество групп, в которые она входит, упорядоченный по убыванию ко-
 личества групп.
+MATCH (p:Person)-[r:Subscribe]-()  RETURN p.name, count(r) AS num_groups ORDER BY num_groups DESC
 
 5) Выдать общее количество групп, в которых состоят друзья друзей персо-
 ны с заданными ФИО.
+MATCH (da:Person{name:'Diana Andrews'})-[:Friend*2]-(p:Person)-[:Subscribe]-(g:Group) WHERE p<>da RETURN count(distinct g) as total_group
 
 3 Дополнительное. Дополните узлы пользователей социальной сети массивом
 опубликованных записей этих пользователей (аналог истории твитов или
