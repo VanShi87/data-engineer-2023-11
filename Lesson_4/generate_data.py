@@ -15,7 +15,7 @@ df = pd.DataFrame()
 df['sex'] = np.random.choice(['F', 'M'], NUM_PERSONS)
 df['name'] = np.where(df['sex']=='F',
                       [fake.name_female() for _ in range(NUM_PERSONS)],
-                      [fake.name_female() for _ in range(NUM_PERSONS)])
+                      [fake.name_male() for _ in range(NUM_PERSONS)])
 df['age'] = np.random.randint(16, 70, NUM_PERSONS)
 df['city'] = np.random.choice(['Moscow', 'St-Petersburg', 'Voronezh', 'Yaroslavl', 'Sochi'], NUM_PERSONS)
 df['code'] = ('CREATE (:Person {name: "' +
