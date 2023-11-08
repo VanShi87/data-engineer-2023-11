@@ -47,18 +47,35 @@ MATCH (da:Person{name:'Diana Andrews'})-[:Friend*2]-(p:Person)-[:Subscribe]-(g:G
 опубликованных записей этих пользователей (аналог истории твитов или
 статусов) и разработайте следующие запросы:
 1) Вывести список записей персоны с заданными ФИО.
+MATCH (p:Person{name:'Daniel Potter'}) RETURN p.tweets
 
 2) Вывести список средних длин записи для каждого пользователя, отсорти-
 рованный по убыванию средней длины.
+MATCH (p:Person)
+RETURN p.name, round(reduce(avg_size = 0.0, tweet IN p.tweets | avg_size + (size(tweet)+0.0)/size(p.tweets)),2) AS avg_tweet_length
+ORDER BY avg_tweet_length DESC
 
 Указание: вычислить сумму длин всех записей с использованием функ-
 ции REDUCE.
 
 3) Вывести все записи в социальной сети, длиннее некоторой величины.
 Указание: используйте функцию Filter.
+-- Filter deprecated
+MATCH (p:Person)
+UNWIND p.tweets AS person_tweets
+WITH [tweet in COLLECT(person_tweets) WHERE size(tweet)>10] AS long_tweets
+UNWIND long_tweets AS goal_tweets
+RETURN goal_tweets
 
 4) Выдать список ФИО персон, в котором для каждой персоны указано ко-
 личество записей данной персоны, упорядоченный по убыванию количе-
 ства записей.
+MATCH (p:Person)
+RETURN p.name, size(p.tweets) AS num_tweets
+ORDER BY num_tweets DESC
 
 5) Вывести все записи друзей друзей персоны с заданными ФИО.
+MATCH (rc:Person{name:'Rhonda Cross'})-[:Friend*2]-(p:Person)
+WHERE p<>rc
+UNWIND p.tweets as ff_tweets
+RETURN DISTINCT ff_tweets
