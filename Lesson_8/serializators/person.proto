@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+message Person {
+    string name = 1;
+    repeated string interests = 2;
+    map<string, int32> projectToHours = 3;
+    int32 age = 4;
+    float salary = 5;
+}
