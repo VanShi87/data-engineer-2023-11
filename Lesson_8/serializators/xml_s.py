@@ -19,9 +19,9 @@ def xml_serializator(person_list):
         age_xml.text = str(person.age)
         salary_xml = ET.SubElement(person_xml, "salary")
         salary_xml.text = str(person.salary)
-        xml_string = ET.tostring(person_xml, encoding="utf-8")
+        xml_string = ET.tostring(person_xml)
         return xml_string
 
-    with open('files/persons.xml', 'w') as file:
+    with open('files/persons.xml', 'wb') as file:
         xml_strings = [xml_element(person) for person in person_list]
-        file.write('\n'.join(xml_strings))
+        file.write(b'<Persons>' + b''.join(xml_strings) + b'</Persons>')
