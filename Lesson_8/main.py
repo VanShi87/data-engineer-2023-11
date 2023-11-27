@@ -6,5 +6,5 @@ serializator_list = [avro_serializator, json_serializator, messagepack_serializa
                      parquet_serializator, protobuffers_serializator, xml_serializator, yaml_serializator]
 
 for serializator in serializator_list:
-    if serializator is yaml_serializator:
+    if serializator is xml_serializator:
         serializator(person_list)
