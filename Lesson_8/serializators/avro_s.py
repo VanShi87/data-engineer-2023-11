@@ -16,8 +16,10 @@ avro_schema = avro.schema.parse('''
                                 }
                                 ''')
 
-def avro_serializator(person_list):
-    avro_writer = DataFileWriter(open('files/person.avro', 'wb'), DatumWriter(), avro_schema)
+def avro_serializator(person_list, n):
+    avro_writer = DataFileWriter(open(f'files/persons_{n}.avro', 'wb'), DatumWriter(), avro_schema)
     for person in person_list:
         avro_writer.append(person.__dict__)
     avro_writer.close()
+
+    return f'files/persons_{n}.avro'

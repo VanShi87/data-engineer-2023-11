@@ -15,8 +15,8 @@ Person_protobuf.add_field('projectToHours', MessageField(field_number=3, repeate
 Person_protobuf.add_field('age', Int32Field(field_number=4, optional=False))
 Person_protobuf.add_field('salary', FloatField(field_number=5, optional=False))
 
-def protobuffers_serializator(person_list):
-    with open('files/person.protobuf', 'wb') as file:
+def protobuffers_serializator(person_list, n):
+    with open(f'files/persons_{n}.protobuf', 'wb') as file:
         for person in person_list:
             person_protobuf = Person_protobuf()
             person_protobuf.name = person.name
@@ -31,3 +31,4 @@ def protobuffers_serializator(person_list):
             serialized_data = person_protobuf.encode_to_bytes()
             file.write(serialized_data)
 
+    return f'files/persons_{n}.protobuf'

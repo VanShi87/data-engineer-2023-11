@@ -1,5 +1,5 @@
 import xml.etree.ElementTree as ET
-def xml_serializator(person_list):
+def xml_serializator(person_list, n):
 
     def xml_element(person):
         person_xml = ET.Element("Person")
@@ -22,6 +22,8 @@ def xml_serializator(person_list):
         xml_string = ET.tostring(person_xml)
         return xml_string
 
-    with open('files/persons.xml', 'wb') as file:
+    with open(f'files/persons_{n}.xml', 'wb') as file:
         xml_strings = [xml_element(person) for person in person_list]
         file.write(b'<Persons>' + b''.join(xml_strings) + b'</Persons>')
+
+    return f'files/persons_{n}.xml'
