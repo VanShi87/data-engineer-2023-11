@@ -24,9 +24,9 @@ def create_person_list(n):
                           for _ in range(np.random.randint(0,10))
                          }
         age = np.random.randint(18, 65)
-        salary = np.round(11500 + np.random.random()*50000)
+        salary = float(np.round(11500 + np.random.random()*50000))
         person = Person(name=name, interests=interests, projectToHours=projectToHours, age=age, salary=salary)
         person_list.append(person)
     return person_list
 
-print(create_person_list(2))
+
