@@ -49,7 +49,9 @@ class Target(pygame.Rect):
     def move(self):
         self.x_ -= self.speed_x * self.direction
         self.y_ -= self.speed_y
-        print(self.x_, self.y_)
+        self.speed_y -= 0.001
+        self.x = self.x_
+        self.y = self.y_
 
 def create_targets():
     target = Target()

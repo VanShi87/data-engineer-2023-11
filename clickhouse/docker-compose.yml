@@ -2,6 +2,8 @@ version: "3"
 services:
   server:
     image: yandex/clickhouse-server
+    expose:
+      - "5432"
     ports:
       - "8123:8123"
       - "9000:9000"
@@ -12,5 +14,7 @@ services:
         soft: 262144
         hard: 262144
   client:
+    expose:
+      - "5432"
     image: yandex/clickhouse-client
     command: ['--host', 'server']
