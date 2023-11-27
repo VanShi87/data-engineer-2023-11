@@ -18,7 +18,7 @@ black = (0, 0, 0)
 
 # Set up the target
 target_radius = 15
-target_speed = 0.3
+target_speed = .5
 targets = []
 
 # Set up the score
@@ -38,8 +38,8 @@ class Target(pygame.Rect):
                          window_height - target_radius - 20,
                          target_radius * 2,
                          target_radius * 2)
-        speed = 0.25 + np.random.random_sample()
-        alpha = math.radians(np.random.randint(35,55))
+        speed = target_speed + np.random.random_sample()*.25
+        alpha = math.radians(np.random.randint(45,65))
         self.speed_x = speed * math.cos(alpha)
         self.speed_y = speed * math.sin(alpha)
         self.x_ = self.x
@@ -49,7 +49,7 @@ class Target(pygame.Rect):
     def move(self):
         self.x_ -= self.speed_x * self.direction
         self.y_ -= self.speed_y
-        self.speed_y -= 0.001
+        self.speed_y -= 0.0005
         self.x = self.x_
         self.y = self.y_
 
@@ -89,7 +89,7 @@ while running:
             targets.remove(target)
 
     # Create new targets
-    if len(targets) < 1:
+    if len(targets) < 2:
         create_targets()
 
     # Update the display
