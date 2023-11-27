@@ -25,7 +25,7 @@ for n in num_rows:
         file = serializator(person_list, n)
         end = time.time()
         index = str(serializator).split()[1].split('_')[0]
-        df.loc[index, f"n={n}, time, s"] = (end - start)/1000
-        df.loc[index, f"n={n}, volume, Kb"] = os.path.getsize(file)
+        df.loc[index, f"n={n}, time, s"] = (end - start)
+        df.loc[index, f"n={n}, volume, Kb"] = os.path.getsize(file)/1024
         print(n, index)
 df.to_excel('statistics.xlsx')
