@@ -1,0 +1,6 @@
+www.facebook.com 100
+www.google.com 10
+www.google.com 5
+www.google.com 15
+www.yandex.ru 60
+www.yandex.ru 100

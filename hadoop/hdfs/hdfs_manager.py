@@ -14,7 +14,7 @@ hdfs = HDFileSystem(host, port, user)
 
 hdfs.ls('/user/data')
 hdfs.put('file.txt', 'file.txt')
-hdfs.cp('file.txt', '/user/data')
+hdfs.cp("file.txt", "/user/data")
 
 with hdfs.open('/user/data/file.txt', 'rb') as f:
     data = f.read(1000000)
