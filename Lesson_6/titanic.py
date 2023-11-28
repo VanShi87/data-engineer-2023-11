@@ -14,23 +14,24 @@ with clickhouse_driver.connect(host='localhost', port=9000) as conn:
                    'Pclass Int64,'
                    'Name String,'
                    'Sex String,'
-                   'Age Float64,'
+                   'Age Nullable(Float64),'
                    'SibSp Int64,'
                    'Parch Int64,'
                    'Ticket String,'
                    'Fare Float64,'
-                   'Cabin String,'
-                   'Embarked String'
+                   'Cabin Nullable(String),'
+                   'Embarked Nullable(String)'
                    ') ENGINE = MergeTree() ORDER BY PassengerId')
 
 
         export_query = '''
         INSERT INTO titanic 
         SELECT *
-        FROM "postgresql"('127.0.0.1:5432', 'postgres', 'titanic', 'postgres', 'postgres')
+        FROM "postgresql"('172.22.0.1:5432', 'postgres', 'titanic', 'postgres', 'postgres')
         '''
 
         cursor.execute(export_query)
+
 
 
 

@@ -1,0 +1,11 @@
+SELECT Sex, Survived, COUNT(*) as Num_people
+FROM titanic
+GROUP BY Sex, Survived;
+
+SELECT Pclass, ROUND(SUM(Survived)/COUNT(*)*100) AS survived_perc
+FROM titanic
+GROUP BY Pclass
+ORDER BY survived_perc DESC;
+
+
+
