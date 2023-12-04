@@ -6,8 +6,8 @@ from hdfs3 import HDFileSystem
 # https://hdfs3.readthedocs.io/en/latest/
 
 host = 'localhost'
-port = 8022
-user = 'cloudera'
+port = 9000
+user = 'root'
 
 # hdfs = HDFileSystem(host='localhost', port=8020)
 hdfs = HDFileSystem(host, port, user)
