@@ -7,13 +7,14 @@ from pyspark.sql.functions import *
 
 from pyspark import SparkConf, SparkContext
 from pyspark.sql import SparkSession
+from pyspark.sql.types import DoubleType
 
 import numpy as np
 import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
 from pyarrow import fs
-import pyarrow.parquet.encryption as pe
+# import pyarrow.parquet.encryption as pe
 import pyspark.pandas as ps
 
 
@@ -31,4 +32,10 @@ if __name__ == '__main__':
         .appName("wordsCount") \
         .getOrCreate()
 
+    # df = spark.read.csv('winemag-data-130k-v2.csv', sep=',', header=True, inferSchema=True)
+    # filteredDF = df.filter(col('country').isNotNull()).filter(col('price').cast(DoubleType()).isNotNull())
+    # filteredDF.groupby(col('country')).agg(max('price').alias('max_price')).sort('max_price', ascending=False).show(10)
+    # filteredDF.show(10)
+    df = spark.read.text('words.txt')
+    df.select(explode(split(col("value"), "\s+")).alias("word")).groupby('word').count().show()
 
