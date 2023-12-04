@@ -1,0 +1,104 @@
+hdfs dfs -mkdir /employee
+
+hdfs dfs -mkdir /employee/employee
+
+hdfs dfs -mkdir /employee/hr
+
+hdfs dfs -mkdir /employee/contract
+
+hdfs dfs -put employee/employee_id.txt /employee/employee
+
+hdfs dfs -put employee/employee_hr.txt /employee/hr
+
+hdfs dfs -put employee/employee_contract.txt /employee/contract
+
+hive
+
+CREATE EXTERNAL TABLE employee (
+  name string,
+  id int,
+  work_place ARRAY<string>,
+  gender_age STRUCT<gender:string,age:int>,
+  skills_score MAP<string,int>,
+  depart_title MAP<STRING,ARRAY<STRING>>
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '|'
+COLLECTION ITEMS TERMINATED BY ','
+MAP KEYS TERMINATED BY ':'
+STORED AS TEXTFILE
+LOCATION '/employee/employee';
+
+CREATE EXTERNAL TABLE hr_info (
+  name string,
+  id int,
+  ssn string,
+  emp_date date
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '|'
+COLLECTION ITEMS TERMINATED BY ','
+MAP KEYS TERMINATED BY ':'
+STORED AS TEXTFILE
+LOCATION '/employee/hr';
+
+CREATE EXTERNAL TABLE contract (
+  name string,
+  department_id int,
+  employee_id int,
+  salary int,
+  contract_type string,
+  contract_date date
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '|'
+COLLECTION ITEMS TERMINATED BY ','
+MAP KEYS TERMINATED BY ':'
+STORED AS TEXTFILE
+LOCATION '/employee/contract';
+
+1. Сделать выборку данных обо всех сотрудниках из таблицы employee
+SELECT * FROM employee;
+
+2. Вывести рабочие места сотрудника в отдельных колонках из таблицы employee
+SELECT work_place[0], work_place[1] FROM employee WHERE id=100;
+
+3. Вывести по отдельности поля структуры gender_age из таблицы employee
+SELECT gender_age.gender, gender_age.age FROM employee;
+
+4. Вывести по отдельности поля словаря skills_score из таблицы employee
+SELECT explode(skills_score) FROM employee;
+
+5. Вывести имена сотрудников возраста между 27 и 30
+SELECT name FROM employee WHERE gender_age.age BETWEEN 27 AND 30;
+
+6. Реализовать UDF (с IF и CASE WHEN): если пол человека Male добавить к
+имени Mr. иначе Ms. Если массив work_place содержит 'New York', то вывести
+country US, иначе CA
+SELECT CASE WHEN gender_age.gender=="Male" THEN "Mr. " || name
+            ELSE "Ms. " || name
+            END AS full_name,
+       CASE WHEN array_contains(work_place, "New York") THEN "US"
+            ELSE "CA"
+            END AS country
+FROM employee;
+
+7. Посчитать количество сотрудников каждого пола
+SELECT gender_age.gender, COUNT(*) FROM employee GROUP BY gender_age.gender;
+
+8. Сгруппировать по полу и подсчитать средний возраст
+SELECT gender_age.gender, AVG(gender_age.age) FROM employee GROUP BY gender_age.gender;
+
+9. Вывести пол, максимальный возраст и имя сотрудника
+-- ??? непонятно, выбрал всех сотрудников с максимальным возрастом без учета, что age - это может быть
+-- возраст на момент трудоустройства
+SELECT name, gender_age.gender, gender_age.age FROM employee
+WHERE gender_age.age IN (SELECT MAX(gender_age.age) FROM employee);
+
+10. Использовать оконные функции: OVER - сумма зарплат по департаментам
+-- На последнюю дату
+SELECT name, department_id, salary, SUM(salary) OVER (PARTITION BY department_id) AS dep_salary_sum
+FROM (SELECT name, department_id, salary,
+      ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY contract_date DESC) AS rn
+      FROM contract) AS t1
+WHERE rn=1;
