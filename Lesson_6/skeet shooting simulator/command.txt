@@ -1,0 +1,23 @@
+-- Статистика игрока по сессии
+
+-- Точность и скорость
+SELECT session_id,
+       MAX(score)/SUM(mouse_click) as accuracy,
+       MAX(score)/(MAX(time_stamp)-MIN(time_stamp)) as plates_per_second
+FROM sss_statistics WHERE mouse_click=1 and bullets>0
+GROUP BY session_id
+
+-- Количество мискликов
+SELECT session_id,
+       count(*) as misclicks
+FROM sss_statistics WHERE mouse_click=1 and bullets<1
+GROUP BY session_id
+
+-- Перезарядка
+SELECT session_id,
+       SUM(CASE WHEN bullets=0 THEN 1 ELSE 0 END)/count(*) as reload_0,
+       SUM(CASE WHEN bullets=1 THEN 1 ELSE 0 END)/count(*) as reload_1,
+       SUM(CASE WHEN bullets=2 THEN 1 ELSE 0 END)/count(*) as reload_2
+FROM sss_statistics WHERE mouse_click=3
+GROUP BY session_id
+

@@ -2,6 +2,19 @@ import pygame
 import numpy as np
 import random
 import math
+import time
+from collections import namedtuple
+import atexit
+import json
+import uuid
+
+def save_logs():
+    data = {str(uuid.uuid4()): logs}
+    with open('statistics.json', 'a') as file:
+        json.dump(data, file)
+        file.write('\n')
+
+atexit.register(save_logs)
 
 # Initialize pygame
 pygame.init()
@@ -30,6 +43,11 @@ bullets = 2
 reload_time = 2
 reloading = False
 
+# Define a named tuple for logs
+LogEntry = namedtuple('LogEntry', ['mouse_position_x', 'mouse_position_y', 'mouse_click', 'timestamp', 'score', 'bullets'])
+logs = []
+last_timestamp = time.time()
+
 # Function to create a new pair of targets
 class Target(pygame.Rect):
     def __init__(self):
@@ -44,7 +62,6 @@ class Target(pygame.Rect):
         self.speed_y = speed * math.sin(alpha)
         self.x_ = self.x
         self.y_ = self.y
-        print(speed, alpha, self.direction, self.speed_x, self.speed_y)
 
     def move(self):
         self.x_ -= self.speed_x * self.direction
@@ -63,9 +80,11 @@ running = True
 while running:
     # Handle events
     for event in pygame.event.get():
+
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
+            logs.append(LogEntry(*event.pos, event.button, time.time(), score, bullets))
             if event.button == 1 and not reloading:
                 for target in targets:
                     if target.collidepoint(event.pos):
@@ -75,9 +94,15 @@ while running:
                 bullets -= 1
                 if bullets <= 0:
                     reloading = True
+
             elif event.button == 3:
                 bullets = 2
                 reloading = False
+
+    current_timestamp = time.time()
+    if current_timestamp - last_timestamp > 0.05:
+        logs.append(LogEntry(*pygame.mouse.get_pos(), 0, current_timestamp, score, bullets))
+        last_timestamp = current_timestamp
 
     # Move the targets
     for target in targets:
@@ -117,6 +142,7 @@ while running:
                      (crosshair_x + crosshair_size, crosshair_y + crosshair_size // 2))
 
     pygame.display.update()
+
 
 # Quit the game
 pygame.quit()
